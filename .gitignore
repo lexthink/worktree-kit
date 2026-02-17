@@ -1,0 +1,15 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# Claude Code local files
+.claude/settings.local.json
+.claude/memory/
+
+# Test temp files
+/tmp/

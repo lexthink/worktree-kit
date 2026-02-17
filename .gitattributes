@@ -1,0 +1,10 @@
+# Force LF line endings for shell scripts (cross-platform consistency)
+*.sh text eol=lf
+*.bats text eol=lf
+
+# Linguist overrides for GitHub stats
+*.bats linguist-language=Shell
+*.md linguist-documentation
+
+# Ensure text files are normalized
+* text=auto

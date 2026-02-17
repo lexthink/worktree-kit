@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Git config
+        run: |
+          git config --global user.email "ci@worktree-kit.test"
+          git config --global user.name "CI Bot"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats shellcheck
+
+      - name: Make scripts executable
+        run: |
+          chmod +x setup.sh install.sh
+          chmod +x src/skills/_shared/scripts/*.sh
+          chmod +x src/skills/*/scripts/*.sh
+
+      - name: Run shellcheck on scripts
+        run: |
+          shellcheck setup.sh install.sh
+          find src/skills -name "*.sh" -type f -exec shellcheck {} \;
+
+      - name: Run test suite
+        run: bats tests/*.bats

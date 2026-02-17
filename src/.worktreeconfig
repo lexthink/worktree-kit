@@ -1,0 +1,35 @@
+# Worktree Kit Configuration
+# This file is OPTIONAL. All values have sensible defaults.
+# Uncomment and customize sections as needed.
+# See USAGE.md for full examples by tech stack.
+
+# [copy] - Files and directories to copy into new worktrees
+# include: space-separated list of files or directories (relative to repo root)
+# exclude: exact paths to skip (e.g. node_modules/.cache)
+#
+# [copy]
+# include = .env.example .editorconfig node_modules
+# exclude = node_modules/.cache
+
+# [hooks] - Commands to run automatically in the worktree directory
+# Chain multiple commands with && on a single line.
+#
+# [hooks]
+# post_create = npm install && npm run build
+# pre_commit = npm run lint && npm test
+
+# [defaults] - Default behavior
+# editor: Editor preference (cursor, code, etc.)
+# issue_tracker: Issue tracker for ticket lookups (linear, jira, shortcut, github, auto)
+#
+[defaults]
+# editor = cursor
+# issue_tracker = auto
+
+# [worktrees] - Worktree directories and naming
+# directory: Where worktrees are created (defaults to repo root)
+# default_branch: The "main" branch for syncing and pruning (defaults to "main")
+#
+[worktrees]
+# directory = .
+# default_branch = main
