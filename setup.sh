@@ -65,7 +65,7 @@ POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -a|--agent)
-      if [[ -z "${2:-}" ]]; then
+      if [[ -z "${2:-}" || "${2:-}" == -* ]]; then
         echo "✖ Error: $1 requires a value (${SUPPORTED_AGENTS[*]})."
         exit 1
       fi
