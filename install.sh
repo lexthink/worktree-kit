@@ -22,7 +22,7 @@ if [[ $# -eq 0 || "$1" == "-h" || "$1" == "--help" ]]; then
   echo ""
   echo "Options:"
   echo "  -a, --agent <name>   Agent to configure (default: claude-code)"
-  echo "  --ref <ref>          Git ref to download (default: main)"
+  echo "  -r, --ref <ref>      Git ref to download (default: main)"
   echo "  -h, --help           Show this help message"
   echo ""
   echo "Examples:"
@@ -34,19 +34,23 @@ if [[ $# -eq 0 || "$1" == "-h" || "$1" == "--help" ]]; then
   exit 0
 fi
 
-# Parse flags: consume --ref locally, pass everything else to setup.sh
+# Parse flags: consume -r/--ref locally, pass everything else to setup.sh
 INSTALL_ARGS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --ref)
-      if [[ -z "${2:-}" ]]; then
-        echo "Error: --ref requires a value (branch or commit)."
+    -r|--ref)
+      if [[ -z "${2:-}" || "${2:-}" == -* ]]; then
+        echo "Error: $1 requires a value (branch or commit)."
         exit 1
       fi
       BRANCH="$2"
       shift 2
       ;;
     -a|--agent)
+      if [[ -z "${2:-}" || "${2:-}" == -* ]]; then
+        echo "Error: $1 requires a value (agent name)."
+        exit 1
+      fi
       INSTALL_ARGS+=("$1" "$2")
       shift 2
       ;;
