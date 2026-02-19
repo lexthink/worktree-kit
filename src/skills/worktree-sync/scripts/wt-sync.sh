@@ -113,12 +113,11 @@ for target in "${TARGETS[@]}"; do
 done
 
 if [[ "$OUTPUT_FORMAT" == "json" ]]; then
-  printf "[\n"
-  first=true
+  json_open_arr
   for entry in "${RESULTS[@]}"; do
     IFS='|' read -r branch status <<< "$entry"
-    [[ "$first" == "true" ]] && first=false || printf ",\n"
-    printf '  {"branch": "%s", "status": "%s"}' "$(json_escape "$branch")" "$(json_escape "$status")"
+    json_comma
+    printf '  {%s, %s}' "$(json_str branch "$branch")" "$(json_str status "$status")"
   done
-  printf "\n]\n"
+  json_close_arr
 fi

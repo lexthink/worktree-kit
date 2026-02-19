@@ -48,8 +48,7 @@ if [[ ! -f "$LOG_FILE" ]]; then
 fi
 
 if [[ "$OUTPUT_FORMAT" == "json" ]]; then
-  printf "[\n"
-  first=true
+  json_open_arr
   while IFS= read -r line; do
     [[ -z "$line" ]] && continue
     if [[ "$line" =~ ^\[([^\]]+)\]\ \[([^\]]+)\]\ ([a-z-]+)(.*) ]]; then
@@ -58,12 +57,13 @@ if [[ "$OUTPUT_FORMAT" == "json" ]]; then
       [[ -n "$FILTER_WORKTREE" && "$wt" != "$FILTER_WORKTREE" ]] && continue
       branch=""; [[ "$rest" =~ branch=([^ ]+) ]] && branch="${BASH_REMATCH[1]}"
       details=""; [[ "$rest" =~ details=\"(.*)\"$ ]] && details="${BASH_REMATCH[1]}"
-      [[ "$first" == "true" ]] && first=false || printf ",\n"
-      printf '  {"timestamp": "%s", "user": "%s", "operation": "%s", "worktree": "%s", "branch": "%s", "details": "%s"}' \
-        "$(json_escape "$ts")" "$(json_escape "$user")" "$(json_escape "$op")" "$(json_escape "$wt")" "$(json_escape "$branch")" "$(json_escape "$details")"
+      json_comma
+      printf '  {%s, %s, %s, %s, %s, %s}' \
+        "$(json_str timestamp "$ts")" "$(json_str user "$user")" "$(json_str operation "$op")" \
+        "$(json_str worktree "$wt")" "$(json_str branch "$branch")" "$(json_str details "$details")"
     fi
   done < <(tail -n "$COUNT" "$LOG_FILE")
-  printf "\n]\n"
+  json_close_arr
   exit 0
 fi
 

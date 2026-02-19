@@ -39,6 +39,55 @@ teardown() {
 }
 
 # ============================================
+# ui-utils.sh JSON helper tests
+# ============================================
+
+@test "json_str escapes double quotes and backslashes" {
+  source "$SCRIPTS_SHARED/ui-utils.sh"
+  result=$(json_str name 'say "hello" \ world')
+  [ "$result" = '"name": "say \"hello\" \\ world"' ]
+}
+
+@test "json_str escapes newlines and tabs" {
+  source "$SCRIPTS_SHARED/ui-utils.sh"
+  result=$(json_str msg $'line1\nline2\ttab')
+  [ "$result" = '"msg": "line1\nline2\ttab"' ]
+}
+
+@test "json_str handles empty value" {
+  source "$SCRIPTS_SHARED/ui-utils.sh"
+  result=$(json_str key "")
+  [ "$result" = '"key": ""' ]
+}
+
+@test "json_raw outputs literal values" {
+  source "$SCRIPTS_SHARED/ui-utils.sh"
+  [ "$(json_raw count 42)" = '"count": 42' ]
+  [ "$(json_raw flag true)" = '"flag": true' ]
+  [ "$(json_raw val null)" = '"val": null' ]
+}
+
+@test "json_open_arr resets comma tracker" {
+  source "$SCRIPTS_SHARED/ui-utils.sh"
+  # Simulate a previous array that advanced the comma tracker
+  _JSON_FIRST=false
+  result=$(json_open_arr; json_comma; echo "item1"; json_comma; echo "item2"; json_close_arr)
+  [[ "$result" == *"item1"* ]]
+  # First item should NOT have a leading comma
+  [[ ! "$result" =~ ^\[.*,.*item1 ]]
+  # Second item should have a comma before it
+  [[ "$result" == *",
+item2"* ]]
+}
+
+@test "json_comma produces correct separators" {
+  source "$SCRIPTS_SHARED/ui-utils.sh"
+  _JSON_FIRST=true
+  result=$(json_comma; printf 'a'; json_comma; printf 'b'; json_comma; printf 'c')
+  [ "$result" = $'a,\nb,\nc' ]
+}
+
+# ============================================
 # parse-config.sh tests
 # ============================================
 

@@ -86,9 +86,12 @@ case "$PROVIDER" in
 esac
 
 if [[ "$OUTPUT_FORMAT" == "json" ]]; then
-  printf '{ "provider": "%s", "host": "%s", "organization": "%s", "repository": "%s", "branch": "%s", "base": "%s", "link": "%s" }\n' \
-    "$(json_escape "$PROVIDER")" "$(json_escape "$HOST")" "$(json_escape "$ORG")" "$(json_escape "$REPO_NAME")" \
-    "$(json_escape "$BRANCH")" "$(json_escape "$BASE_BRANCH")" "$(json_escape "$PR_LINK")"
+  json_open_obj
+  printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s' \
+    "$(json_str provider "$PROVIDER")" "$(json_str host "$HOST")" "$(json_str organization "$ORG")" \
+    "$(json_str repository "$REPO_NAME")" "$(json_str branch "$BRANCH")" "$(json_str base "$BASE_BRANCH")" \
+    "$(json_str link "$PR_LINK")"
+  json_close_obj
 else
   printf '%b\n' "${BOLD}${BLUE}PR Link ($PROVIDER) ${icon_info}${NC}"
   echo "$PR_LINK"

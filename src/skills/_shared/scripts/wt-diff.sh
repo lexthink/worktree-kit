@@ -114,21 +114,18 @@ fi
 
 # --- Output ---
 if [[ "$OUTPUT_JSON" == "true" ]]; then
-  printf '{\n'
-  printf '  "folder": "%s",\n' "$(json_escape "$FOLDER")"
-  printf '  "files_changed": %s,\n' "$file_count"
-  printf '  "lines_added": %s,\n' "$total_added"
-  printf '  "lines_removed": %s,\n' "$total_removed"
-  printf '  "staged_files": %s,\n' "$staged_count"
-  printf '  "untracked_files": %s,\n' "$untracked_count"
+  json_open_obj
+  printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n' \
+    "$(json_str folder "$FOLDER")" "$(json_raw files_changed "$file_count")" \
+    "$(json_raw lines_added "$total_added")" "$(json_raw lines_removed "$total_removed")" \
+    "$(json_raw staged_files "$staged_count")" "$(json_raw untracked_files "$untracked_count")"
   printf '  "files": [\n'
-  first=true
+  _JSON_FIRST=true
   for entry in "${files_data[@]}"; do
     IFS='|' read -r fname added removed <<< "$entry"
-    [[ "$first" == "false" ]] && printf ',\n'
-    first=false
-    printf '    {"file": "%s", "added": %s, "removed": %s}' \
-      "$(json_escape "$fname")" "$added" "$removed"
+    json_comma
+    printf '    {%s, %s, %s}' \
+      "$(json_str file "$fname")" "$(json_raw added "$added")" "$(json_raw removed "$removed")"
   done
   printf '\n  ]\n'
   printf '}\n'

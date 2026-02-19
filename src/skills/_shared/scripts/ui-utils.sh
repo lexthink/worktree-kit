@@ -121,9 +121,42 @@ json_escape() {
   printf '%s' "$s"
 }
 
+# --- JSON Builder Helpers ---
+# Build JSON objects and arrays with proper comma handling.
+
+# Print a JSON string field: "key": "escaped_value"
+# Usage: json_str "key" "value"
+json_str() { printf '"%s": "%s"' "$1" "$(json_escape "$2")"; }
+
+# Print a JSON literal field: "key": value (for numbers, booleans, null).
+# Caller must ensure value is a valid JSON literal — no validation is done.
+# Usage: json_raw "key" true   |   json_raw "count" 42   |   json_raw "val" null
+json_raw() { printf '"%s": %s' "$1" "$2"; }
+
+# Array/object delimiters.
+# json_open_arr automatically resets the comma tracker so json_comma
+# works correctly without a separate json_comma_reset call.
+json_open_arr()  { _JSON_FIRST=true; printf '[\n'; }
+json_close_arr() { printf '\n]\n'; }
+json_open_obj()  { printf '{\n'; }
+json_close_obj() { printf '\n}\n'; }
+
+# Comma separator with first-element tracking.
+# Automatically reset by json_open_arr. Call json_comma_reset manually
+# only when reusing the tracker outside an array (e.g. nested arrays).
+_JSON_FIRST=true
+json_comma_reset() { _JSON_FIRST=true; }
+json_comma() {
+  if [[ "$_JSON_FIRST" == "true" ]]; then
+    _JSON_FIRST=false
+  else
+    printf ',\n'
+  fi
+}
+
 # Output a JSON error object and exit.
 # Usage: json_error "message" [exit_code]
 json_error() {
-  printf '{"error": "%s"}\n' "$(json_escape "$1")"
+  printf '{%s}\n' "$(json_str error "$1")"
   exit "${2:-1}"
 }

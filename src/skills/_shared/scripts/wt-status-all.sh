@@ -40,16 +40,17 @@ REPO_ROOT="${REPO_ROOT:-$(find_repo_root)}" || { printf '%b\n' "$icon_fail Error
 WORKTREE_LIST=$(list_worktrees)
 
 if [[ "$OUTPUT_FORMAT" == "json" ]]; then
-  printf "[\n"
-  first=true
+  json_open_arr
   while IFS='|' read -r worktree_path name _branch; do
     [[ -z "$worktree_path" ]] && continue
     status_code=$(get_wt_status "$worktree_path")
     dirty="false"; [[ "$status_code" == "dirty" ]] && dirty="true"
-    [[ "$first" == "true" ]] && first=false || printf ",\n"
-    printf '  {"folder": "%s", "path": "%s", "status": "%s", "dirty": %s}' "$(json_escape "$name")" "$(json_escape "$worktree_path")" "$(json_escape "$status_code")" "$dirty"
+    json_comma
+    printf '  {%s, %s, %s, %s}' \
+      "$(json_str folder "$name")" "$(json_str path "$worktree_path")" \
+      "$(json_str status "$status_code")" "$(json_raw dirty "$dirty")"
   done <<< "$WORKTREE_LIST"
-  printf "\n]\n"
+  json_close_arr
   exit 0
 fi
 

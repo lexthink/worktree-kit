@@ -82,16 +82,15 @@ done < <(list_worktrees)
 
 # --- Output ---
 if [[ "$OUTPUT_JSON" == "true" ]]; then
-  printf '[\n'
-  first=true
+  json_open_arr
   for entry in "${results[@]}"; do
     IFS='|' read -r folder branch status branch_commits default_commits <<< "$entry"
-    [[ "$first" == "false" ]] && printf ',\n'
-    first=false
-    printf '  {"folder": "%s", "branch": "%s", "merge_status": "%s", "branch_commits": %s, "default_commits": %s}' \
-      "$(json_escape "$folder")" "$(json_escape "$branch")" "$status" "$branch_commits" "$default_commits"
+    json_comma
+    printf '  {%s, %s, %s, %s, %s}' \
+      "$(json_str folder "$folder")" "$(json_str branch "$branch")" "$(json_str merge_status "$status")" \
+      "$(json_raw branch_commits "$branch_commits")" "$(json_raw default_commits "$default_commits")"
   done
-  printf '\n]\n'
+  json_close_arr
 else
   print_header "MERGE STATUS (vs $DEFAULT_BRANCH)"
 
