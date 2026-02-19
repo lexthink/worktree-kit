@@ -127,7 +127,7 @@ fi
 # 2. Config
 if [[ -f "$REPO_ROOT/.worktreeconfig" ]]; then
   check_pass ".worktreeconfig found"
-  check_info "Default branch: $($SCRIPT_DIR/parse-config.sh worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo 'main')"
+  check_info "Default branch: $($SCRIPT_DIR/parse-config.sh worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo 'main')"
 else
   check_warn ".worktreeconfig not found (using defaults)"
 fi

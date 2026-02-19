@@ -11,7 +11,7 @@ Parses `.worktreeconfig` files and returns configuration values.
 ```bash
 # Get a single value
 ./parse-config.sh worktrees.directory
-./parse-config.sh worktrees.default_branch
+./parse-config.sh worktrees.default-branch
 ./parse-config.sh defaults.editor
 
 # Specify repo root
@@ -80,25 +80,25 @@ Diagnoses the health and configuration of the worktree-kit setup.
 
 ### wt-run-hooks.sh
 
-Executes hooks defined in `.worktreeconfig` (post_create, pre_commit).
+Executes hooks defined in `.worktreeconfig` (post-create, pre-commit).
 
 ```bash
-# Run post_create hooks for a worktree
-./wt-run-hooks.sh post_create /path/to/worktree
+# Run post-create hooks for a worktree
+./wt-run-hooks.sh post-create /path/to/worktree
 
-# Run pre_commit hooks (e.g., tests, linting)
-./wt-run-hooks.sh pre_commit
+# Run pre-commit hooks (e.g., tests, linting)
+./wt-run-hooks.sh pre-commit
 
 # Dry-run to see what would be executed
-./wt-run-hooks.sh post_create /path/to/worktree --dry-run
+./wt-run-hooks.sh post-create /path/to/worktree --dry-run
 ```
 
 **Configuration example:**
 
 ```ini
 [hooks]
-post_create = npm install && npm run build
-pre_commit = npm run lint && npm test
+post-create = npm install && npm run build
+pre-commit = npm run lint && npm test
 ```
 
 ---
@@ -108,11 +108,11 @@ pre_commit = npm run lint && npm test
 | Key                        | Default   | Description                                                                       |
 | -------------------------- | --------- | --------------------------------------------------------------------------------- |
 | `worktrees.directory`      | repo root | Directory where worktrees are created                                             |
-| `worktrees.default_branch` | `main`    | Default branch name                                                               |
+| `worktrees.default-branch` | `main`    | Default branch name                                                               |
 | `defaults.editor`          | (none)    | Editor preference for agents when explicitly requested (not automatic)            |
-| `defaults.issue_tracker`   | `auto`    | Issue tracker for ticket lookups (`linear`, `jira`, `shortcut`, `github`, `auto`) |
-| `hooks.post_create`        | (none)    | Commands to run after creating a worktree (supports `&&` chaining)                |
-| `hooks.pre_commit`         | (none)    | Commands to run before commits (supports `&&` chaining)                           |
+| `defaults.issue-tracker`   | `auto`    | Issue tracker for ticket lookups (`linear`, `jira`, `shortcut`, `github`, `auto`) |
+| `hooks.post-create`        | (none)    | Commands to run after creating a worktree (supports `&&` chaining)                |
+| `hooks.pre-commit`         | (none)    | Commands to run before commits (supports `&&` chaining)                           |
 | `copy.include`             | (none)    | Space-separated files, directories, or patterns to copy                           |
 | `copy.exclude`             | (none)    | Space-separated exact paths to exclude (relative to repo root)                    |
 
@@ -145,13 +145,13 @@ SHARED_SCRIPTS="$SCRIPT_DIR/../../_shared/scripts"
 "$SHARED_SCRIPTS/wt-merge-status.sh" --json
 
 # Use parse-config.sh
-DEFAULT_BRANCH=$("$SHARED_SCRIPTS/parse-config.sh" worktrees.default_branch)
+DEFAULT_BRANCH=$("$SHARED_SCRIPTS/parse-config.sh" worktrees.default-branch)
 
 # Use copy-files.sh
 "$SHARED_SCRIPTS/copy-files.sh" "$NEW_WORKTREE_PATH" --verbose
 
 # Use wt-run-hooks.sh
-"$SHARED_SCRIPTS/wt-run-hooks.sh" post_create "$WORKTREE_PATH"
+"$SHARED_SCRIPTS/wt-run-hooks.sh" post-create "$WORKTREE_PATH"
 
 # Use wt-diagnose.sh
 "$SHARED_SCRIPTS/wt-diagnose.sh" --verbose
@@ -273,7 +273,7 @@ Create a git worktree with full environment setup. Unifies the creation logic us
 ./wt-create.sh --branch feature/auth --folder ABC-1234 --no-hooks --no-copy
 ```
 
-Handles: existing worktree reuse, branch detection (local/remote/new), upstream tracking, file copying, post_create hooks, and operation logging.
+Handles: existing worktree reuse, branch detection (local/remote/new), upstream tracking, file copying, post-create hooks, and operation logging.
 
 ---
 

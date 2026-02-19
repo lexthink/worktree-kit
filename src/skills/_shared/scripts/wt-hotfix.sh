@@ -56,7 +56,7 @@ fi
 [[ -d "$REPO_ROOT/.git" ]] || { printf '%b\n' "$icon_fail Error: Not in a git repository" >&2; exit 1; }
 
 # Config & Branching
-DEFAULT_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
+DEFAULT_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
 BASE_BRANCH="${BASE_BRANCH:-$DEFAULT_BRANCH}"
 HOTFIX_FOLDER="hotfix-$HOTFIX_NAME"
 HOTFIX_BRANCH="hotfix/$HOTFIX_NAME"

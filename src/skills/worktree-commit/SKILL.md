@@ -46,9 +46,9 @@ Analyze the staged changes and generate a message.
 
 Before executing the commit, check for custom validation hooks:
 
-1. **Check Config**: Look for `[hooks]` -> `pre_commit` in the `.worktreeconfig` file (located in the repository root).
+1. **Check Config**: Look for `[hooks]` -> `pre-commit` in the `.worktreeconfig` file (located in the repository root).
 2. **Execute Hooks**:
-   - If a `pre_commit` command is defined, execute it inside the current worktree folder.
+   - If a `pre-commit` command is defined, execute it inside the current worktree folder.
    - Example: `npm test` or `flake8 .`
 3. **Evaluate Result**:
    - If the command **fails** (non-zero exit code):

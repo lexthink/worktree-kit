@@ -49,7 +49,7 @@ REPO_ROOT="${REPO_ROOT:-$(find_repo_root "$PWD" pwd)}"
 [[ -z "$BRANCH" ]] && { echo "Error: Could not determine branch" >&2; exit 1; }
 
 if [[ -z "$BASE_BRANCH" ]]; then
-  BASE_BRANCH=$("$SHARED_DIR/parse-config.sh" worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
+  BASE_BRANCH=$("$SHARED_DIR/parse-config.sh" worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
 fi
 
 REMOTE_URL=$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || echo "")

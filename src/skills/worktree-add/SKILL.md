@@ -36,7 +36,7 @@ metadata:
 Read the configured issue tracker:
 
 ```bash
-.skills/_shared/scripts/parse-config.sh defaults.issue_tracker
+.skills/_shared/scripts/parse-config.sh defaults.issue-tracker
 ```
 
 Use the returned value (`linear`, `jira`, `shortcut`, `github`) to choose the correct MCP tools or API for ticket lookups. If unset or `auto`, auto-detect from available MCP tools or ask the user.
@@ -65,7 +65,7 @@ Priority order:
 2. Branch name declared in issue content (`Branch: <name>`, `Git branch: <name>`).
 3. Fallback: generate `feature/<lowercase-ticket>-<kebab-case-title>`.
 
-Set `BASE_BRANCH` = `[worktrees].default_branch` from `.worktreeconfig`, otherwise `main`.
+Set `BASE_BRANCH` = `[worktrees].default-branch` from `.worktreeconfig`, otherwise `main`.
 
 ## Step 2 — Create the worktree
 
@@ -85,7 +85,7 @@ The script handles everything automatically:
 - Creates the worktree with correct git commands
 - Sets upstream tracking
 - Copies files from `.worktreeconfig` `[copy]` rules
-- Runs `[hooks].post_create` commands
+- Runs `[hooks].post-create` commands
 - Logs the operation to `.worktree-history.log`
 - Prints the `WORKTREE READY` summary
 

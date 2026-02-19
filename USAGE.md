@@ -118,16 +118,16 @@ include = .env.example *.md node_modules
 exclude = node_modules/.cache
 
 [hooks]
-post_create = npm install && cp .env.example .env
-pre_commit = npm run lint && npm test
+post-create = npm install && cp .env.example .env
+pre-commit = npm run lint && npm test
 
 [defaults]
 editor = cursor
-issue_tracker = linear
+issue-tracker = linear
 
 [worktrees]
 directory = .
-default_branch = main
+default-branch = main
 ```
 
 Notes:
@@ -135,15 +135,15 @@ Notes:
 - `[copy]` supports `include` and `exclude`, each accepting a space-separated list.
 - `include` accepts files, directories, or file patterns. Directories are detected automatically and copied recursively; file patterns are matched via `find -name` (max depth 2).
 - `exclude` accepts **exact paths** relative to the repo root (e.g. `node_modules/.cache`, `mydir/secret.json`). Only the specified path is excluded — a bare filename like `secret.json` only excludes that file at the root, not inside subdirectories.
-- Keys are snake_case only.
+- Keys use kebab-case (e.g. `default-branch`, `post-create`).
 - Unknown keys are ignored.
 - `worktrees.directory` supports absolute, `~`, or repo-relative paths.
-- Defaults when `.worktreeconfig` is missing: `worktrees.directory` = `.` (repo root), `worktrees.default_branch` = `main`.
+- Defaults when `.worktreeconfig` is missing: `worktrees.directory` = `.` (repo root), `worktrees.default-branch` = `main`.
 - The default branch is used by `worktree-list`, `worktree-prune`, and `worktree-sync` as the reference branch.
-- `[hooks]` commands run via `eval`; chain multiple commands with `&&` (e.g. `pre_commit = npm run lint && npm test`).
-- `hooks.pre_commit` runs automatically before every commit via `worktree-commit`. If it fails, the commit is aborted.
+- `[hooks]` commands run via `eval`; chain multiple commands with `&&` (e.g. `pre-commit = npm run lint && npm test`).
+- `hooks.pre-commit` runs automatically before every commit via `worktree-commit`. If it fails, the commit is aborted.
 - `defaults.editor` is a preference for agents when explicitly requested; scripts do not open editors automatically.
-- `defaults.issue_tracker` tells agents which tracker to use for ticket lookups (`linear`, `jira`, `shortcut`, `github`, `auto`). Defaults to `auto`.
+- `defaults.issue-tracker` tells agents which tracker to use for ticket lookups (`linear`, `jira`, `shortcut`, `github`, `auto`). Defaults to `auto`.
 
 ### Step B: Development
 

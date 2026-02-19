@@ -14,9 +14,9 @@ USAGE:
   parse-config.sh <key> [--repo PATH]
 
 KEYS SUPPORTED:
-  worktrees.default_branch
+  worktrees.default-branch
   worktrees.directory
-  defaults.issue_tracker
+  defaults.issue-tracker
 EOF
   exit 0
 }
@@ -37,25 +37,4 @@ CONFIG_FILE="$REPO_ROOT/.worktreeconfig"
 
 [[ ! -f "$CONFIG_FILE" ]] && exit 1
 
-SECTION_REQ="${KEY%.*}"
-PROP_REQ="${KEY#*.}"
-
-current_section=""
-while IFS= read -r line || [[ -n "$line" ]]; do
-  # Remove comments and trim leading/trailing whitespace
-  line=$(echo "$line" | sed 's/#.*//' | xargs)
-  [[ -z "$line" ]] && continue
-
-  if [[ "$line" =~ ^\[([^\]]+)\]$ ]]; then
-    current_section="${BASH_REMATCH[1]}"
-  elif [[ "$current_section" == "$SECTION_REQ" && "$line" == *"="* ]]; then
-    key_found=$(echo "${line%%=*}" | xargs)
-    if [[ "$key_found" == "$PROP_REQ" ]]; then
-      val_found=$(echo "${line#*=}" | xargs)
-      echo "$val_found" | tr -d '"' | tr -d "'"
-      exit 0
-    fi
-  fi
-done < "$CONFIG_FILE"
-
-exit 1
+git config -f "$CONFIG_FILE" "$KEY" 2>/dev/null || exit 1
