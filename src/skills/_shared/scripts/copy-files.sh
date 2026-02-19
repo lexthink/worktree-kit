@@ -59,8 +59,14 @@ declare -a excludes=()
 
 inc_str=$(git config -f "$CONFIG_FILE" copy.include 2>/dev/null) || true
 exc_str=$(git config -f "$CONFIG_FILE" copy.exclude 2>/dev/null) || true
-for token in $inc_str; do includes+=("$token"); done
-for token in $exc_str; do excludes+=("$token"); done
+for token in $inc_str; do
+  [[ "$token" == /* || "$token" == *..* ]] && continue
+  includes+=("$token")
+done
+for token in $exc_str; do
+  [[ "$token" == /* || "$token" == *..* ]] && continue
+  excludes+=("$token")
+done
 
 # Build worktree exclusions so we don't copy files from sibling worktrees
 WT_EXCLUDES=()
@@ -98,14 +104,14 @@ for entry in "${includes[@]}"; do
       cp -Rp "$src/." "$dest/"
       # Remove excluded paths inside the copied directory
       for exc in ${excludes[@]+"${excludes[@]}"}; do
-        [[ "$exc" == "$entry/"* ]] && [[ -e "$dest/${exc#"$entry"/}" ]] && rm -rf "$dest/${exc#"$entry"/}"
+        [[ "$exc" == "$entry/"* ]] && [[ -e "${dest:?}/${exc#"$entry"/}" ]] && rm -rf "${dest:?}/${exc#"$entry"/}"
       done
     fi
     if [[ "$VERBOSE" == "true" ]]; then printf '%b\n' "  $icon_pass Folder: $entry"; fi
   else
     # File pattern: find matching files
     find "$REPO_ROOT" -maxdepth 2 -name "$entry" -not -path "*/.git/*" ${WT_EXCLUDES[@]+"${WT_EXCLUDES[@]}"} | while read -r match; do
-      rel="${match#$REPO_ROOT/}"
+      rel="${match#"$REPO_ROOT"/}"
       skip=false
       for exc in ${excludes[@]+"${excludes[@]}"}; do [[ "$rel" == "$exc" ]] && skip=true; done
       [[ "$skip" == "true" ]] && continue
