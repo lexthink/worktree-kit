@@ -59,7 +59,7 @@ while IFS='|' read -r wt_path name _branch; do
       size=$(du -sh "$wt_path/$folder" | awk '{print $1}')
       status="Found"
       if [[ "$DRY_RUN" == "false" ]]; then
-        rm -rf "$wt_path/$folder"
+        rm -rf "${wt_path:?}/${folder:?}"
         status="Cleaned"
       else
         status="Would Clean (dry-run)"

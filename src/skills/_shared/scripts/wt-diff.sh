@@ -77,10 +77,8 @@ fi
 
 # --- Gather diff stats ---
 if [[ "$STAGED_ONLY" == "true" ]]; then
-  diff_stat=$(git -C "$wt_path" diff --cached --stat 2>/dev/null || echo "")
   diff_numstat=$(git -C "$wt_path" diff --cached --numstat 2>/dev/null || echo "")
 else
-  diff_stat=$(git -C "$wt_path" diff --stat 2>/dev/null || echo "")
   diff_numstat=$(git -C "$wt_path" diff --numstat 2>/dev/null || echo "")
 fi
 
