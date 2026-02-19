@@ -78,19 +78,18 @@ case "$COMMAND" in
     stash_list=$(git stash list --format="%gd|%gs" 2>/dev/null || git -C "$REPO_ROOT" stash list --format="%gd|%gs" 2>/dev/null || echo "")
 
     if [[ "$OUTPUT_JSON" == "true" ]]; then
-      echo "["
-      first=true
-      echo "$stash_list" | while IFS='|' read -r ref message; do
+      json_open_arr
+      while IFS='|' read -r ref message; do
         [[ -z "$ref" ]] && continue
         if [[ -n "$WORKTREE_NAME" ]] && [[ ! "$message" =~ \[worktree:$WORKTREE_NAME\] ]]; then continue; fi
-        [[ "$first" == "false" ]] && echo ","
-        first=false
+        json_comma
         index="0"; [[ "$ref" =~ stash@\{([0-9]+)\} ]] && index="${BASH_REMATCH[1]}"
         worktree=""; [[ "$message" =~ \[worktree:([^\]]+)\] ]] && { worktree="${BASH_REMATCH[1]}"; message="${message#*] }"; }
-        printf '  {"index": %s, "ref": "%s", "worktree": "%s", "message": "%s"}' \
-          "$index" "$(json_escape "$ref")" "$(json_escape "$worktree")" "$(json_escape "$message")"
-      done
-      printf '%b\n' "\n]"
+        printf '  {%s, %s, %s, %s}' \
+          "$(json_raw index "$index")" "$(json_str ref "$ref")" \
+          "$(json_str worktree "$worktree")" "$(json_str message "$message")"
+      done <<< "$stash_list"
+      json_close_arr
     else
       print_header "WORKTREE STASHES"
       printf '%b\n' "${BOLD}INDEX  WORKTREE     MESSAGE${NC}"

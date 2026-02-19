@@ -128,18 +128,13 @@ if [[ "$DRY_RUN" == "true" ]]; then
   git_with_timeout git -C "$REPO_ROOT" ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1 && has_remote=true
 
   if [[ "$OUTPUT_JSON" == "true" ]]; then
-    cat <<ENDJSON
-{
-  "dry_run": true,
-  "folder": "$(json_escape "$FOLDER")",
-  "path": "$(json_escape "$FULL_PATH")",
-  "branch": "$(json_escape "$BRANCH")",
-  "base": "$(json_escape "$BASE_BRANCH")",
-  "action": "$ACTION",
-  "has_local": $has_local,
-  "has_remote": $has_remote
-}
-ENDJSON
+    json_open_obj
+    printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s' \
+      "$(json_raw dry_run true)" "$(json_str folder "$FOLDER")" \
+      "$(json_str path "$FULL_PATH")" "$(json_str branch "$BRANCH")" \
+      "$(json_str base "$BASE_BRANCH")" "$(json_str action "$ACTION")" \
+      "$(json_raw has_local "$has_local")" "$(json_raw has_remote "$has_remote")"
+    json_close_obj
   else
     printf '%b\n' "\n${BOLD}${CYAN}DRY RUN — nothing will be created${NC}"
     printf '%b\n' "Folder: ${CYAN}$FOLDER${NC}"
@@ -216,17 +211,13 @@ fi
 
 # --- Output ---
 if [[ "$OUTPUT_JSON" == "true" ]]; then
-  cat <<ENDJSON
-{
-  "folder": "$(json_escape "$FOLDER")",
-  "path": "$(json_escape "$FULL_PATH")",
-  "branch": "$(json_escape "$BRANCH")",
-  "base": "$(json_escape "$BASE_BRANCH")",
-  "action": "$ACTION",
-  "has_upstream": $HAS_UPSTREAM,
-  "upstream_cmd": "$(json_escape "$UPSTREAM_MSG")"
-}
-ENDJSON
+  json_open_obj
+  printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s' \
+    "$(json_str folder "$FOLDER")" "$(json_str path "$FULL_PATH")" \
+    "$(json_str branch "$BRANCH")" "$(json_str base "$BASE_BRANCH")" \
+    "$(json_str action "$ACTION")" "$(json_raw has_upstream "$HAS_UPSTREAM")" \
+    "$(json_str upstream_cmd "$UPSTREAM_MSG")"
+  json_close_obj
 else
   printf '%b\n' "\n${BOLD}${GREEN}WORKTREE READY${NC}"
   printf '%b\n' "Folder: ${CYAN}$FOLDER${NC}"

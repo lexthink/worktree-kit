@@ -93,22 +93,15 @@ fi
 
 # --- Output ---
 if [[ "$OUTPUT_JSON" == "true" ]]; then
-  cat <<ENDJSON
-{
-  "folder": "$(json_escape "$FOLDER")",
-  "path": "$(json_escape "$wt_path")",
-  "branch": "$(json_escape "$wt_branch")",
-  "status": "$status",
-  "changed_files": $changed_files,
-  "ahead": $ahead,
-  "behind": $behind,
-  "last_commit": {
-    "hash": "$(json_escape "$last_hash")",
-    "message": "$(json_escape "$last_msg")",
-    "date": "$(json_escape "$last_date")"
-  }
-}
-ENDJSON
+  json_open_obj
+  printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n' \
+    "$(json_str folder "$FOLDER")" "$(json_str path "$wt_path")" \
+    "$(json_str branch "$wt_branch")" "$(json_str status "$status")" \
+    "$(json_raw changed_files "$changed_files")" "$(json_raw ahead "$ahead")" \
+    "$(json_raw behind "$behind")"
+  printf '  "last_commit": {%s, %s, %s}' \
+    "$(json_str hash "$last_hash")" "$(json_str message "$last_msg")" "$(json_str date "$last_date")"
+  json_close_obj
 else
   printf '%b\n' "\n${BOLD}${BLUE}CONTEXT SWITCHED${NC}"
   printf '%b\n' "Folder:      ${CYAN}$FOLDER${NC}"

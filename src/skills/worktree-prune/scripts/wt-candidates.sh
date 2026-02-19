@@ -66,15 +66,14 @@ while IFS='|' read -r current_wt folder branch; do
 done < <(list_worktrees)
 
 if [[ "$OUTPUT_FORMAT" == "json" ]]; then
-  printf "[\n"
-  first=true
+  json_open_arr
   for entry in "${CANDIDATES[@]}"; do
     IFS='|' read -r folder branch reason <<< "$entry"
-    [[ "$first" == "true" ]] && first=false || printf ",\n"
-    printf '  {"folder": "%s", "branch": "%s", "reason": "%s"}' \
-      "$(json_escape "$folder")" "$(json_escape "$branch")" "$(json_escape "$reason")"
+    json_comma
+    printf '  {%s, %s, %s}' \
+      "$(json_str folder "$folder")" "$(json_str branch "$branch")" "$(json_str reason "$reason")"
   done
-  printf "\n]\n"
+  json_close_arr
   exit 0
 fi
 

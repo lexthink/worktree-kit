@@ -65,14 +65,18 @@ LAST_COMMIT_AUTHOR=$(git -C "$WT_PATH" log -1 --format="%an" HEAD 2>/dev/null ||
 
 output_json() {
   local status_clean="true"; [[ "$STATUS_CODE" == "dirty" ]] && status_clean="false"
-  cat <<ENDJSON
-{
-  "folder": "$(json_escape "$WT_FOLDER")", "path": "$(json_escape "$WT_PATH")", "branch": "$(json_escape "$WT_BRANCH")",
-  "status": {"clean": $status_clean, "code": "$(json_escape "$STATUS_CODE")", "staged": $STAGED, "unstaged": $UNSTAGED, "untracked": $UNTRACKED},
-  "sync": {"has_upstream": $HAS_UPSTREAM, "upstream": "$(json_escape "$UPSTREAM")", "ahead": $AHEAD, "behind": $BEHIND},
-  "last_commit": {"date": "$(json_escape "$LAST_COMMIT_DATE")", "relative": "$(json_escape "$LAST_COMMIT_REL")", "author": "$(json_escape "$LAST_COMMIT_AUTHOR")"}
-}
-ENDJSON
+  json_open_obj
+  printf '  %s, %s, %s,\n' \
+    "$(json_str folder "$WT_FOLDER")" "$(json_str path "$WT_PATH")" "$(json_str branch "$WT_BRANCH")"
+  printf '  "status": {%s, %s, %s, %s, %s},\n' \
+    "$(json_raw clean "$status_clean")" "$(json_str code "$STATUS_CODE")" \
+    "$(json_raw staged "$STAGED")" "$(json_raw unstaged "$UNSTAGED")" "$(json_raw untracked "$UNTRACKED")"
+  printf '  "sync": {%s, %s, %s, %s},\n' \
+    "$(json_raw has_upstream "$HAS_UPSTREAM")" "$(json_str upstream "$UPSTREAM")" \
+    "$(json_raw ahead "$AHEAD")" "$(json_raw behind "$BEHIND")"
+  printf '  "last_commit": {%s, %s, %s}' \
+    "$(json_str date "$LAST_COMMIT_DATE")" "$(json_str relative "$LAST_COMMIT_REL")" "$(json_str author "$LAST_COMMIT_AUTHOR")"
+  json_close_obj
 }
 
 output_text() {

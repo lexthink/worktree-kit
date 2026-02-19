@@ -93,21 +93,20 @@ output_table() {
 }
 case "$OUTPUT_FORMAT" in
   json)
-    printf "[\n"
-    first=true
+    json_open_arr
     for entry in "${WORKTREES[@]}"; do
       IFS='|' read -r folder path branch status ahead behind size last <<< "$entry"
       dirty="false"
       [[ "$status" == "dirty" ]] && dirty="true"
-      if [[ "$first" == "true" ]]; then
-        first=false
-      else
-        printf ",\n"
-      fi
-      printf '  {"folder": "%s", "path": "%s", "branch": "%s", "status": "%s", "dirty": %s, "ahead": %s, "behind": %s, "size": "%s", "activity": "%s"}' \
-        "$(json_escape "$folder")" "$(json_escape "$path")" "$(json_escape "$branch")" "$(json_escape "$status")" "$dirty" "$ahead" "$behind" "$(json_escape "$size")" "$(json_escape "$last")"
+      json_comma
+      printf '  {%s, %s, %s, %s, %s, %s, %s, %s, %s}' \
+        "$(json_str folder "$folder")" "$(json_str path "$path")" \
+        "$(json_str branch "$branch")" "$(json_str status "$status")" \
+        "$(json_raw dirty "$dirty")" "$(json_raw ahead "$ahead")" \
+        "$(json_raw behind "$behind")" "$(json_str size "$size")" \
+        "$(json_str activity "$last")"
     done
-    printf "\n]\n"
+    json_close_arr
     ;;
   short) for e in "${WORKTREES[@]}"; do IFS='|' read -r f _ b _ <<< "$e"; echo "$f ($b)"; done ;;
   *) output_table ;;

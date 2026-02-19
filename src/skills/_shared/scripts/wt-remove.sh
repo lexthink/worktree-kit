@@ -111,8 +111,11 @@ fi
 
 if [[ "$HAS_CHANGES" == "true" && "$FORCE" != "true" ]]; then
   if [[ "$OUTPUT_JSON" == "true" ]]; then
-    printf '{"error": "uncommitted_changes", "folder": "%s", "changed_files": %s, "hint": "Use --force to override"}\n' \
-      "$(json_escape "$FOLDER")" "$CHANGED_FILES"
+    json_open_obj
+    printf '  %s,\n  %s,\n  %s,\n  %s' \
+      "$(json_str error "uncommitted_changes")" "$(json_str folder "$FOLDER")" \
+      "$(json_raw changed_files "$CHANGED_FILES")" "$(json_str hint "Use --force to override")"
+    json_close_obj
   else
     printf '%b\n' "$icon_warn Worktree ${BOLD}$FOLDER${NC} has $CHANGED_FILES uncommitted change(s)."
     printf '%b\n' "  Removing it will ${RED}lose these changes${NC}."
@@ -124,17 +127,13 @@ fi
 # --- Dry run ---
 if [[ "$DRY_RUN" == "true" ]]; then
   if [[ "$OUTPUT_JSON" == "true" ]]; then
-    cat <<ENDJSON
-{
-  "dry_run": true,
-  "folder": "$(json_escape "$FOLDER")",
-  "path": "$(json_escape "$wt_path")",
-  "branch": "$(json_escape "$wt_branch")",
-  "has_changes": $HAS_CHANGES,
-  "changed_files": $CHANGED_FILES,
-  "would_delete_branch": $DELETE_BRANCH
-}
-ENDJSON
+    json_open_obj
+    printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s' \
+      "$(json_raw dry_run true)" "$(json_str folder "$FOLDER")" \
+      "$(json_str path "$wt_path")" "$(json_str branch "$wt_branch")" \
+      "$(json_raw has_changes "$HAS_CHANGES")" "$(json_raw changed_files "$CHANGED_FILES")" \
+      "$(json_raw would_delete_branch "$DELETE_BRANCH")"
+    json_close_obj
   else
     printf '%b\n' "\n${BOLD}${CYAN}DRY RUN — nothing will be removed${NC}"
     printf '%b\n' "Folder: ${CYAN}$FOLDER${NC}"
@@ -174,15 +173,15 @@ fi
 
 # --- Output ---
 if [[ "$OUTPUT_JSON" == "true" ]]; then
-  cat <<ENDJSON
-{
-  "folder": "$(json_escape "$FOLDER")",
-  "branch": "$(json_escape "$wt_branch")",
-  "branch_deleted": $BRANCH_DELETED,
-  "had_changes": $HAS_CHANGES,
-  "forced": $FORCE$(if [[ -n "$BRANCH_DELETE_ERROR" ]]; then printf ',\n  "branch_delete_error": "%s"' "$(json_escape "$BRANCH_DELETE_ERROR")"; fi)
-}
-ENDJSON
+  json_open_obj
+  printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s' \
+    "$(json_str folder "$FOLDER")" "$(json_str branch "$wt_branch")" \
+    "$(json_raw branch_deleted "$BRANCH_DELETED")" "$(json_raw had_changes "$HAS_CHANGES")" \
+    "$(json_raw forced "$FORCE")"
+  if [[ -n "$BRANCH_DELETE_ERROR" ]]; then
+    printf ',\n  %s' "$(json_str branch_delete_error "$BRANCH_DELETE_ERROR")"
+  fi
+  json_close_obj
 else
   printf '%b\n' "\n${BOLD}${GREEN}WORKTREE REMOVED${NC}"
   printf '%b\n' "Folder: ${CYAN}$FOLDER${NC}"

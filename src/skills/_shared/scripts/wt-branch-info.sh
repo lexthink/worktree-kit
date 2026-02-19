@@ -97,21 +97,15 @@ fi
 
 # --- Output ---
 if [[ "$OUTPUT_JSON" == "true" ]]; then
-  cat <<ENDJSON
-{
-  "branch": "$(json_escape "$CLEAN_BRANCH")",
-  "exists_local": $has_local,
-  "exists_remote": $has_remote,
-  "checked_out_in": "$(json_escape "$checked_out_in")",
-  "ahead": $ahead,
-  "behind": $behind,
-  "last_commit": {
-    "hash": "$(json_escape "$last_commit_hash")",
-    "message": "$(json_escape "$last_commit_msg")",
-    "date": "$(json_escape "$last_commit_date")"
-  }
-}
-ENDJSON
+  json_open_obj
+  printf '  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n  %s,\n' \
+    "$(json_str branch "$CLEAN_BRANCH")" "$(json_raw exists_local "$has_local")" \
+    "$(json_raw exists_remote "$has_remote")" "$(json_str checked_out_in "$checked_out_in")" \
+    "$(json_raw ahead "$ahead")" "$(json_raw behind "$behind")"
+  printf '  "last_commit": {%s, %s, %s}' \
+    "$(json_str hash "$last_commit_hash")" "$(json_str message "$last_commit_msg")" \
+    "$(json_str date "$last_commit_date")"
+  json_close_obj
 else
   print_header "BRANCH INFO: $CLEAN_BRANCH"
 
