@@ -57,7 +57,7 @@ The script handles everything automatically:
 - Creates the worktree with correct git commands
 - Sets upstream tracking
 - Copies files from `.worktreeconfig` `[copy]` rules
-- Runs `[hooks].post_create` commands
+- Runs `[hooks].post-create` commands
 - Logs the operation to `.worktree-history.log`
 - Prints the `WORKTREE READY` summary
 

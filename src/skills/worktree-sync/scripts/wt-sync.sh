@@ -39,7 +39,7 @@ done
 REPO_ROOT="${REPO_ROOT:-$(find_repo_root "$PWD" pwd)}"
 
 if [[ ${#TARGETS[@]} -eq 0 ]]; then
-  DEFAULT_BRANCH=$("$SHARED_DIR/parse-config.sh" worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
+  DEFAULT_BRANCH=$("$SHARED_DIR/parse-config.sh" worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
   TARGETS=("$DEFAULT_BRANCH")
 fi
 

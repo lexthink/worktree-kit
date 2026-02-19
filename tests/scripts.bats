@@ -43,19 +43,19 @@ teardown() {
 # ============================================
 
 # @test "parse-config.sh returns defaults when no .worktreeconfig exists" {
-#   run "$SCRIPTS_SHARED/parse-config.sh" worktrees.default_branch --repo "$TEST_REPO"
+#   run "$SCRIPTS_SHARED/parse-config.sh" worktrees.default-branch --repo "$TEST_REPO"
 #   [ "$status" -eq 0 ]
 #   [ "$output" = "main" ]
 # }
 
-@test "parse-config.sh reads worktrees.default_branch from config" {
+@test "parse-config.sh reads worktrees.default-branch from config" {
   cat > "$TEST_REPO/.worktreeconfig" <<EOF
 [worktrees]
 directory = .worktrees
-default_branch = develop
+default-branch = develop
 EOF
 
-  run "$SCRIPTS_SHARED/parse-config.sh" worktrees.default_branch --repo "$TEST_REPO"
+  run "$SCRIPTS_SHARED/parse-config.sh" worktrees.default-branch --repo "$TEST_REPO"
   [ "$status" -eq 0 ]
   [ "$output" = "develop" ]
 }
@@ -71,13 +71,13 @@ EOF
   [ "$output" = ".worktrees" ]
 }
 
-@test "parse-config.sh reads defaults.issue_tracker from config" {
+@test "parse-config.sh reads defaults.issue-tracker from config" {
   cat > "$TEST_REPO/.worktreeconfig" <<EOF
 [defaults]
-issue_tracker = linear
+issue-tracker = linear
 EOF
 
-  run "$SCRIPTS_SHARED/parse-config.sh" defaults.issue_tracker --repo "$TEST_REPO"
+  run "$SCRIPTS_SHARED/parse-config.sh" defaults.issue-tracker --repo "$TEST_REPO"
   [ "$status" -eq 0 ]
   [ "$output" = "linear" ]
 }
@@ -85,7 +85,7 @@ EOF
 # @test "parse-config.sh --json outputs valid structure" {
 #   cat > "$TEST_REPO/.worktreeconfig" <<EOF
 # [worktrees]
-# default_branch = main
+# default-branch = main
 #
 # [defaults]
 # editor = cursor
@@ -93,14 +93,14 @@ EOF
 #
 #   run "$SCRIPTS_SHARED/parse-config.sh" --json --repo "$TEST_REPO"
 #   [ "$status" -eq 0 ]
-#   [[ "$output" == *'"worktrees.default_branch": "main"'* ]]
+#   [[ "$output" == *'"worktrees.default-branch": "main"'* ]]
 #   [[ "$output" == *'"defaults.editor": "cursor"'* ]]
 # }
 #
 # @test "parse-config.sh --all lists all config values" {
 #   cat > "$TEST_REPO/.worktreeconfig" <<EOF
 # [worktrees]
-# default_branch = main
+# default-branch = main
 # EOF
 #
 #   run "$SCRIPTS_SHARED/parse-config.sh" --all --repo "$TEST_REPO"
@@ -505,17 +505,17 @@ EOF
 # ============================================
 
 @test "wt-run-hooks.sh does nothing without config" {
-  run "$SCRIPTS_SHARED/wt-run-hooks.sh" post_create "$MAIN_WT" --repo "$TEST_REPO"
+  run "$SCRIPTS_SHARED/wt-run-hooks.sh" post-create "$MAIN_WT" --repo "$TEST_REPO"
   [ "$status" -eq 0 ]
 }
 
-@test "wt-run-hooks.sh executes post_create hooks" {
+@test "wt-run-hooks.sh executes post-create hooks" {
   cat > "$TEST_REPO/.worktreeconfig" <<EOF
 [hooks]
-post_create = echo "Hook executed" > hook-test.txt
+post-create = echo "Hook executed" > hook-test.txt
 EOF
 
-  run "$SCRIPTS_SHARED/wt-run-hooks.sh" post_create "$MAIN_WT" --repo "$TEST_REPO"
+  run "$SCRIPTS_SHARED/wt-run-hooks.sh" post-create "$MAIN_WT" --repo "$TEST_REPO"
   [ "$status" -eq 0 ]
   [ -f "$MAIN_WT/hook-test.txt" ]
 }
@@ -523,10 +523,10 @@ EOF
 @test "wt-run-hooks.sh --dry-run shows hooks without executing" {
   cat > "$TEST_REPO/.worktreeconfig" <<EOF
 [hooks]
-post_create = echo "Test"
+post-create = echo "Test"
 EOF
 
-  run "$SCRIPTS_SHARED/wt-run-hooks.sh" post_create "$MAIN_WT" --repo "$TEST_REPO" --dry-run
+  run "$SCRIPTS_SHARED/wt-run-hooks.sh" post-create "$MAIN_WT" --repo "$TEST_REPO" --dry-run
   [ "$status" -eq 0 ]
   [[ "$output" == *"DRY-RUN"* ]] || [[ "$output" == *"Would execute"* ]]
 }

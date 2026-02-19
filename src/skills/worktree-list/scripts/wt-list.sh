@@ -46,7 +46,7 @@ done
 REPO_ROOT="${REPO_ROOT:-$(find_repo_root)}"
 
 # Get config
-DEFAULT_BRANCH=$("$SHARED_DIR/parse-config.sh" worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
+DEFAULT_BRANCH=$("$SHARED_DIR/parse-config.sh" worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
 
 # Scan worktrees
 WORKTREES=()

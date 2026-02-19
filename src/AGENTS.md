@@ -46,9 +46,9 @@ All scripts follow a **Minimal Technical UI** standard:
 
 ## Issue Tracker
 
-The `issue_tracker` setting in `.worktreeconfig` → `[defaults].issue_tracker` tells agents which issue tracker to use for ticket lookups. Supported values: `linear`, `jira`, `shortcut`, `github`, `auto`.
+The `issue-tracker` setting in `.worktreeconfig` → `[defaults].issue-tracker` tells agents which issue tracker to use for ticket lookups. Supported values: `linear`, `jira`, `shortcut`, `github`, `auto`.
 
-- Read this setting before any ticket operation (fetch it via `parse-config.sh defaults.issue_tracker`).
+- Read this setting before any ticket operation (fetch it via `parse-config.sh defaults.issue-tracker`).
 - If set to a specific tracker: use the corresponding MCP tools or API (e.g., `linear` → Linear MCP, `jira` → Jira API, `github` → `gh` CLI).
 - If unset or `auto`: auto-detect from available MCP tools, or ask the user.
 

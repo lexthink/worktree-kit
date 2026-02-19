@@ -57,19 +57,10 @@ print_header "SYNCING ENVIRONMENT FILES"
 declare -a includes=()
 declare -a excludes=()
 
-in_copy=false
-while IFS='=' read -r key val || [[ -n "$key" ]]; do
-  line=$(echo "$key" | xargs)
-  [[ "$line" =~ ^\[copy\]$ ]] && { in_copy=true; continue; }
-  [[ "$line" =~ ^\[.*\]$ ]] && { in_copy=false; continue; }
-  [[ "$in_copy" == "false" || -z "$val" ]] && continue
-
-  k=$(echo "$key" | xargs); v=$(echo "$val" | tr -d '"' | tr -d "'" | xargs)
-  case "$k" in
-    include|include_dirs) for token in $v; do includes+=("$token"); done ;;
-    exclude|exclude_dirs) for token in $v; do excludes+=("$token"); done ;;
-  esac
-done < "$CONFIG_FILE"
+inc_str=$(git config -f "$CONFIG_FILE" copy.include 2>/dev/null) || true
+exc_str=$(git config -f "$CONFIG_FILE" copy.exclude 2>/dev/null) || true
+for token in $inc_str; do includes+=("$token"); done
+for token in $exc_str; do excludes+=("$token"); done
 
 # Build worktree exclusions so we don't copy files from sibling worktrees
 WT_EXCLUDES=()

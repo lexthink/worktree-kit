@@ -25,7 +25,7 @@ OPTIONS:
   --repo PATH       Repository root (auto-detected if omitted)
   --json            Output result in JSON format
   --dry-run         Show what would be created without doing it
-  --no-hooks        Skip post_create hooks
+  --no-hooks        Skip post-create hooks
   --no-copy         Skip file copying from .worktreeconfig
   -h, --help        Show this help
 
@@ -98,7 +98,7 @@ fi
 
 # --- Resolve base branch ---
 if [[ -z "$BASE_BRANCH" ]]; then
-  BASE_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
+  BASE_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
 fi
 
 FULL_PATH="$WORKTREES_DIR/$FOLDER"
@@ -205,9 +205,9 @@ if [[ "$ACTION" == "created" ]]; then
     "$SCRIPT_DIR/copy-files.sh" "$FULL_PATH" --repo "$REPO_ROOT" || printf '%b\n' "  $icon_warn copy-files failed (non-fatal)" >&2
   fi
 
-  # Run post_create hooks
+  # Run post-create hooks
   if [[ "$RUN_HOOKS" == "true" ]]; then
-    "$SCRIPT_DIR/wt-run-hooks.sh" post_create "$FULL_PATH" --repo "$REPO_ROOT" 2>/dev/null || true
+    "$SCRIPT_DIR/wt-run-hooks.sh" post-create "$FULL_PATH" --repo "$REPO_ROOT" 2>/dev/null || true
   fi
 
   # Log operation

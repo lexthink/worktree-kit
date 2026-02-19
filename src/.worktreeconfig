@@ -15,21 +15,21 @@
 # Chain multiple commands with && on a single line.
 #
 # [hooks]
-# post_create = npm install && npm run build
-# pre_commit = npm run lint && npm test
+# post-create = npm install && npm run build
+# pre-commit = npm run lint && npm test
 
 # [defaults] - Default behavior
 # editor: Editor preference (cursor, code, etc.)
-# issue_tracker: Issue tracker for ticket lookups (linear, jira, shortcut, github, auto)
+# issue-tracker: Issue tracker for ticket lookups (linear, jira, shortcut, github, auto)
 #
 [defaults]
 # editor = cursor
-# issue_tracker = auto
+# issue-tracker = auto
 
 # [worktrees] - Worktree directories and naming
 # directory: Where worktrees are created (defaults to repo root)
-# default_branch: The "main" branch for syncing and pruning (defaults to "main")
+# default-branch: The "main" branch for syncing and pruning (defaults to "main")
 #
 [worktrees]
 # directory = .
-# default_branch = main
+# default-branch = main

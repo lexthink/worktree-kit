@@ -15,7 +15,7 @@ USAGE:
   wt-run-hooks.sh <hook_type> [worktree_path] [options]
 
 HOOK TYPES:
-  post_create, pre_commit
+  post-create, pre-commit
 
 OPTIONS:
   --repo PATH      Repository root
@@ -50,33 +50,9 @@ CONFIG_FILE="$REPO_ROOT/.worktreeconfig"
 
 [[ ! -f "$CONFIG_FILE" ]] && exit 0
 
-# Extract specific hooks
-HOOKS=()
-in_hooks="false"
-while IFS= read -r raw_line || [[ -n "$raw_line" ]]; do
-  line=$(echo "$raw_line" | sed 's/#.*//')
-  line=$(echo "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
-  [[ -z "$line" ]] && continue
-  if [[ "$line" =~ ^\[hooks\]$ ]]; then
-    in_hooks="true"
-    continue
-  elif [[ "$line" =~ ^\[.*\]$ ]]; then
-    in_hooks="false"
-    continue
-  fi
-
-  if [[ "$in_hooks" == "true" && "$line" == *"="* ]]; then
-    key="${line%%=*}"
-    val="${line#*=}"
-    key=$(echo "$key" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
-    val=$(echo "$val" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
-    if [[ "$key" == "$HOOK_TYPE" ]]; then
-      HOOKS+=("$val")
-    fi
-  fi
-done < "$CONFIG_FILE"
-
-if [[ ${#HOOKS[@]} -eq 0 ]]; then exit 0; fi
+# Extract hook command via git config
+hook_cmd=$(git config -f "$CONFIG_FILE" "hooks.$HOOK_TYPE" 2>/dev/null) || exit 0
+HOOKS=("$hook_cmd")
 
 print_header "RUNNING HOOKS: $HOOK_TYPE"
 FAILED=false

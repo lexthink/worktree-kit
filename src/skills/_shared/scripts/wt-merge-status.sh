@@ -51,7 +51,7 @@ if [[ -z "$REPO_ROOT" ]]; then
 fi
 
 # --- Get default branch ---
-DEFAULT_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
+DEFAULT_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
 
 # --- Scan worktrees ---
 declare -a results=()

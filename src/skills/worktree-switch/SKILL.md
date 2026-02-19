@@ -37,7 +37,7 @@ The script reports:
 - Sync status (ahead/behind remote)
 - Last commit (hash, message, date)
 
-If this is a ticket worktree (folder matches ticket pattern like `ABC-1234`), also fetch the ticket title and status from the configured issue tracker (`.worktreeconfig` → `[defaults].issue_tracker`) via MCP or API.
+If this is a ticket worktree (folder matches ticket pattern like `ABC-1234`), also fetch the ticket title and status from the configured issue tracker (`.worktreeconfig` → `[defaults].issue-tracker`) via MCP or API.
 
 ## Required output
 

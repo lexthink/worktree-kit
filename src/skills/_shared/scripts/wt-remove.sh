@@ -75,7 +75,7 @@ fi
 [[ -d "$REPO_ROOT/.git" ]] || { printf '%b\n' "$icon_fail Error: Not a bare git repository" >&2; exit 1; }
 
 # --- Resolve default branch (protect it) ---
-DEFAULT_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default_branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
+DEFAULT_BRANCH=$("$SCRIPT_DIR/parse-config.sh" worktrees.default-branch --repo "$REPO_ROOT" 2>/dev/null || echo "main")
 
 # --- Find the worktree ---
 wt_path=""

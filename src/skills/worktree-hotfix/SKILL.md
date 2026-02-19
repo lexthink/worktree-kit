@@ -13,7 +13,7 @@ metadata:
 
 ## Non-negotiable rules
 
-1. The BASE_BRANCH MUST be the default branch (resolved from `.worktreeconfig` → `[worktrees].default_branch`, fallback to `main`).
+1. The BASE_BRANCH MUST be the default branch (resolved from `.worktreeconfig` → `[worktrees].default-branch`, fallback to `main`).
 2. You MUST fetch the latest changes from origin for the BASE_BRANCH before branching.
 3. Folder name should be descriptive (e.g., `hotfix-login-bug` or `ABC-1234-fix`).
 4. If a ticket ID is provided, use it in the branch name and folder name.
@@ -21,7 +21,7 @@ metadata:
 ## Step 1 — Identification
 
 1. **Identify the Issue**:
-   - If the user provides a ticket ID (e.g., ABC-1234), fetch the ticket from the configured issue tracker (`.worktreeconfig` → `[defaults].issue_tracker`) via MCP or API to get the title.
+   - If the user provides a ticket ID (e.g., ABC-1234), fetch the ticket from the configured issue tracker (`.worktreeconfig` → `[defaults].issue-tracker`) via MCP or API to get the title.
    - If no ticket is provided, ask for a short description if the user hasn't given one (e.g., "login-bug").
 
 2. **Resolve Names**:
